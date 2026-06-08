@@ -125,15 +125,8 @@ def vehicle():
         return jsonify({
             "status": True,
             "vehicle_number": reg_no,
-            "data": {
-                "chassis_number": p.get("ChassisNumber"),
-                "engine_number": p.get("EngineNumber"),
-                "make": p.get("Make"),
-                "model": p.get("Model"),
-                "variant": p.get("Variant"),
-                "registration_date": p.get("RegistrationDate"),
-                "registration_city": v.get("RegistrationCity")
-            }
+            "data": info,
+            "full_json": decrypted_json
         })
 
     except Exception:
