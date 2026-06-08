@@ -118,22 +118,37 @@ def vehicle():
         decrypted_json = json.loads(result)
 
         info = decrypted_json.get("Data", {})
-
         p = info.get("ParivahanDetail", {})
         v = info.get("VehicleBasicDetail", {})
+
+        chassis = p.get("ChassisNumber")
+        engine = p.get("EngineNumber")
+
+        if not chassis and not engine:
+            return jsonify({
+                "status": False,
+                "message": "Vehicle not found or data unavailable"
+            }), 404
 
         return jsonify({
             "status": True,
             "vehicle_number": reg_no,
-            "data": info,
-            "full_json": decrypted_json
+            "data": {
+                "chassis_number": chassis,
+                "engine_number": engine,
+                "make": p.get("Make"),
+                "model": p.get("Model"),
+                "variant": p.get("Variant"),
+                "registration_date": p.get("RegistrationDate"),
+                "registration_city": v.get("RegistrationCity")
+            }
         })
 
     except Exception:
         return jsonify({
-            "status": True,
-            "raw_response": result
-        })
+            "status": False,
+            "message": "Vehicle not found or data unavailable (HTML response)"
+        }), 404
 
 
 handler = app
